@@ -1,5 +1,5 @@
-# Nhật Ký Sử Dụng AI (AI Prompt Log) - HealthSync System Design
+# Nhật Ký Sử Dụng AI (AI Prompt Log) - AutoRide Database Fix
 
-1. Prompt 1: Trong MySQL, tôi nên dùng kiểu dữ liệu nào (ENUM vs VARCHAR) để quản lý vòng đời trạng thái của lịch hẹn với các giá trị cố định PENDING, CONFIRMED, CHECKED_IN, COMPLETED, CANCELLED?
-2. Prompt 2: Khi thiết kế các cột deposit_amount và penalty_fee trong MySQL phục vụ tính toán tài chính, tôi nên dùng FLOAT, DOUBLE hay DECIMAL? Tại sao?
-3. Prompt 3: Cú pháp thiết lập bảng Prescriptions liên kết 1-1 với Appointments sử dụng UNIQUE CONSTRAINT trên Foreign Key trong MySQL?
+1. Prompt 1: Trong thiết kế CSDL MySQL, tại sao nên dùng DECIMAL(10,2) thay vì FLOAT hay DOUBLE để lưu trữ các khoản phí tài chính như security_deposit, late_fee và damage_fee?
+2. Prompt 2: Phân tích ưu và nhược điểm giữa việc tách bảng Inspections riêng với việc thêm trực tiếp cột damage_description vào bảng Rentals?
+3. Prompt 3: Làm thế nào để viết câu lệnh SELECT tính tiền hoàn trả (security_deposit - late_fee - damage_fee) và xử lý an toàn giá trị NULL trong MySQL?
