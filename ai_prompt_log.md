@@ -1,13 +1,13 @@
-# Nhật ký tương tác AI (AI Prompt Log) - Chuyên đề SQL JOIN
+# Nhật ký Tương tác AI (AI Prompt Log) - Chuyên đề Index & EXPLAIN
 
-## 1. Prompt về sự khác biệt giữa INNER JOIN và LEFT JOIN
-- **User**: Mặc định từ khóa JOIN trong MySQL hoạt động như thế nào? Sự khác biệt giữa INNER JOIN và LEFT JOIN khi xử lý các bản ghi không trùng khớp là gì?
-- **AI Summary**: Từ khóa `JOIN` mặc định là `INNER JOIN`, chỉ trả về các dòng thỏa mãn điều kiện kết hợp ở cả 2 bảng. `LEFT JOIN` giữ lại toàn bộ các dòng từ bảng bên trái (Driving Table) và điền `NULL` vào các cột của bảng bên phải nếu không tìm thấy dữ liệu liên kết trùng khớp.
+## 1. Prompt về Truy vấn Non-SARGable
+- **User**: Trong MySQL, nếu tôi tạo Index cho một cột ngày tháng, nhưng trong mệnh đề WHERE tôi lại viết WHERE YEAR(col) = 2026, tại sao MySQL lại từ chối sử dụng Index và phải quét toàn bộ bảng (Full Table Scan)?
+- **AI Summary**: B-Tree Index sắp xếp dữ liệu dựa trên giá trị thô của cột. Khi sử dụng hàm bọc quanh cột (`YEAR()`), MySQL không thể dùng cấu trúc cây tìm kiếm nhị phân có sẵn mà phải duyệt qua từng dòng dữ liệu để tính toán giá trị của hàm, dẫn đến Full Table Scan.
 
-## 2. Prompt về COUNT(*) vs COUNT(column) khi dùng LEFT JOIN
-- **User**: Khi tôi sử dụng LEFT JOIN và đếm số lượng đơn hàng bằng hàm COUNT, sự khác biệt giữa COUNT(*) và COUNT(tên_cột_khóa_chính_bảng_order) khi kết quả trả về NULL là gì?
-- **AI Summary**: `COUNT(*)` đếm số dòng (bao gồm các dòng chứa NULL), làm sai lệch kết quả của bản ghi mồ côi thành 1. Trong khi đó `COUNT(column)` tự động bỏ qua giá trị `NULL`, giúp trả về kết quả 0 chính xác cho khách hàng chưa phát sinh đơn hàng.
+## 2. Prompt về Thứ tự cột trong Composite Index
+- **User**: Khi thiết kế một Composite Index trong MySQL cho cột (transaction_type, created_at), thứ tự các cột trong Index có quan trọng không?
+- **AI Summary**: Thứ tự cực kỳ quan trọng theo quy tắc Leftmost Prefix. Cột có điều kiện lọc chính xác bằng toán tử `=` (`transaction_type`) nên đặt trước, cột lọc khoảng Range (`created_at`) đặt sau để đạt hiệu quả Selectivity tốt nhất.
 
-## 3. Prompt về Tối ưu hiệu năng Anti-Join vs Subquery
-- **User**: Hãy phân tích hiệu năng của việc dùng LEFT JOIN kết hợp IS NULL (Anti-Join) so with việc dùng subquery NOT IN khi tìm kiếm các bản ghi không tồn tại trong bảng khác.
-- **AI Summary**: `LEFT JOIN ... WHERE IS NULL` cho phép MySQL Optimizer tối ưu tốt hơn nhờ thuật toán Hash Join hoặc Nested-Loop Join có chỉ mục, tránh rủi ro quét toàn bảng (Full Table Scan) hoặc bị sai logic do chứa giá trị NULL như khi dùng `NOT IN`.
+## 3. Prompt về Phân biệt Extra trong EXPLAIN
+- **User**: Trong kết quả EXPLAIN, cột Extra hiện chữ "Using index condition" khác gì với "Using index" (Covering Index)?
+- **AI Summary**: `Using index` nghĩa là toàn bộ cột cần lấy nằm hoàn toàn trong Index (Covering Index) không cần đọc lại bảng gốc. `Using index condition` (Index Condition Pushdown) nghĩa là MySQL dùng Index để lọc bớt các dòng trước khi đọc lại bảng dữ liệu chính, tiết kiệm chi phí I/O.
