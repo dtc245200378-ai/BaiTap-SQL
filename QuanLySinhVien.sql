@@ -66,3 +66,28 @@ EXPLAIN SELECT * FROM customers WHERE contactFirstName = 'Jean' OR contactFirstN
 
 -- 6. Xóa chỉ mục idx_full_name khỏi bảng customers
 ALTER TABLE customers DROP INDEX idx_full_name;
+USE classicmodels;
+
+-- 1. Tạo Stored Procedure lấy danh sách tất cả khách hàng
+DELIMITER //
+CREATE PROCEDURE findAllCustomers()
+BEGIN
+    SELECT * FROM customers;
+END //
+DELIMITER ;
+
+-- 2. Gọi Stored Procedure
+CALL findAllCustomers();
+
+-- 3. Xóa và tạo lại Stored Procedure để lọc theo customerNumber = 175
+DELIMITER //
+DROP PROCEDURE IF EXISTS `findAllCustomers`//
+
+CREATE PROCEDURE findAllCustomers()
+BEGIN
+    SELECT * FROM customers WHERE customerNumber = 175;
+END //
+DELIMITER ;
+
+-- 4. Gọi lại Stored Procedure sau khi cập nhật
+CALL findAllCustomers();
